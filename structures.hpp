@@ -33,7 +33,11 @@ namespace toka
         Matrix copy()
         {
             Matrix ret = Matrix(_h, _w, 0);
-            memcpy(ret._d.get(), _d.get(), _h * _w * sizeof(T));
+            for (size_t i = 0; i < _h * _w; ++i)
+            {
+                ret._d[i] = _d[i];
+            }
+            // memcpy(ret._d.get(), _d.get(), _h * _w * sizeof(T));
             return ret;
         }
 
