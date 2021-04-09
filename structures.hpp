@@ -17,11 +17,6 @@ namespace toka
             _w = w;
             _d = static_cast<std::shared_ptr<T[]>>(new T[_h * _w]);
         }
-        Matrix(unsigned int h, unsigned int w, std::shared_ptr<T[]> ptr)
-        {
-            _allocate(h, w);
-            memcpy(_d.get(), ptr.get(), h * w * sizeof(T));
-        }
 
     public:
         Matrix(unsigned int h, unsigned int w)
@@ -37,7 +32,8 @@ namespace toka
 
         Matrix copy()
         {
-            Matrix ret = Matrix(_h, _w, _d);
+            Matrix ret = Matrix(_h, _w, 0);
+            memcpy(ret._d.get(), _d.get(), _h * _w * sizeof(T));
             return ret;
         }
 
@@ -54,7 +50,7 @@ namespace toka
                 size_t tmp = 0;
                 for (unsigned int j = 0; j < A._h; ++j)
                 {
-                    T k = A[PA(i, j)];
+                    T k = A[PA(j, i)];
                     std::stringstream ts;
                     ts << k;
                     std::string s = ts.str();

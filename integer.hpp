@@ -23,6 +23,12 @@ namespace toka
     class Integer
     {
     public:
+        Integer()
+        {
+            pos = 1;
+            data.clear();
+        }
+
         Integer(const long long &n)
         {
             if (n >= 0)
