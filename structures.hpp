@@ -9,29 +9,29 @@ namespace toka
     class Matrix
     {
     private:
-        int _h, _w;
+        unsigned int _h, _w;
         std::shared_ptr<T[]> _d;
-        void _allocate(int h, int w)
+        void _allocate(unsigned int h, unsigned int w)
         {
             _h = h;
             _w = w;
             _d = static_cast<std::shared_ptr<T[]>>(new T[_h * _w]);
         }
-        Matrix(int h, int w, std::shared_ptr<T[]> ptr)
+        Matrix(unsigned int h, unsigned int w, std::shared_ptr<T[]> ptr)
         {
             _allocate(h, w);
             memcpy(_d.get(), ptr.get(), h * w * sizeof(T));
         }
 
     public:
-        Matrix(int h, int w)
+        Matrix(unsigned int h, unsigned int w)
         {
             _allocate(h, w);
         }
-        Matrix(int h, int w, const T &fill_)
+        Matrix(unsigned int h, unsigned int w, const T &fill_)
         {
             _allocate(h, w);
-            for (int i = 0; i < _h * _w; ++i)
+            for (size_t i = 0; i < _h * _w; ++i)
                 _d[i] = fill_;
         }
 
@@ -49,10 +49,10 @@ namespace toka
         friend std::ostream &operator<<(std::ostream &stream, Matrix A)
         {
             VI width;
-            for (int i = 0; i < A._w; ++i)
+            for (unsigned int i = 0; i < A._w; ++i)
             {
-                std::size_t tmp = 0;
-                for (int j = 0; j < A._h; ++j)
+                size_t tmp = 0;
+                for (unsigned int j = 0; j < A._h; ++j)
                 {
                     T k = A[PA(i, j)];
                     std::stringstream ts;
@@ -62,10 +62,10 @@ namespace toka
                 }
                 width.emplace_back(tmp);
             }
-            for (int i = 0; i < A._h; ++i)
+            for (unsigned int i = 0; i < A._h; ++i)
             {
                 stream << "[";
-                for (int j = 0; j < A._w; ++j)
+                for (unsigned int j = 0; j < A._w; ++j)
                 {
                     T k = A[PA(i, j)];
                     std::stringstream ts;
@@ -84,17 +84,17 @@ namespace toka
         Matrix ONE()
         {
             Matrix ret = Matrix(_h, _w, 0);
-            for (int i = 0; i < std::min(_h, _w); ++i)
+            for (unsigned int i = 0; i < std::min(_h, _w); ++i)
             {
                 ret[PA(i, i)] = 1;
             }
             return ret;
         }
 
-        static Matrix ONE(int n)
+        static Matrix ONE(unsigned int n)
         {
             Matrix ret = Matrix(n, n, 0);
-            for (int i = 0; i < n; ++i)
+            for (unsigned int i = 0; i < n; ++i)
             {
                 ret[PA(i, i)] = 1;
             }
@@ -104,9 +104,9 @@ namespace toka
         Matrix _add(Matrix other)
         {
             assert(_h == other._h && _w == other._w);
-            for (int i = 0; i < _h; ++i)
+            for (unsigned int i = 0; i < _h; ++i)
             {
-                for (int j = 0; j < _w; ++j)
+                for (unsigned int j = 0; j < _w; ++j)
                 {
                     operator[](PA(i, j)) += other[PA(i, j)];
                 }
@@ -126,12 +126,12 @@ namespace toka
         {
             assert(_h == other._h && _w == other._w && _w == other._w);
             assert(dst._h = _h && dst._w == other._w);
-            for (int i = 0; i < _h; ++i)
+            for (unsigned int i = 0; i < _h; ++i)
             {
-                for (int j = 0; j < other._w; ++j)
+                for (unsigned int j = 0; j < other._w; ++j)
                 {
                     dst[PA(i, j)] = 0;
-                    for (int k = 0; k < _w; ++k)
+                    for (unsigned int k = 0; k < _w; ++k)
                     {
                         dst[PA(i, j)] += operator[](PA(i, k)) * other[PA(k, j)];
                     }
@@ -150,9 +150,9 @@ namespace toka
 
         Matrix _mod(T mod)
         {
-            for (int i = 0; i < _h; ++i)
+            for (unsigned int i = 0; i < _h; ++i)
             {
-                for (int j = 0; j < _w; ++j)
+                for (unsigned int j = 0; j < _w; ++j)
                 {
                     operator[](PA(i, j)) %= mod;
                 }
@@ -593,7 +593,7 @@ namespace toka
                 auto ind = seq[nxt];
                 if (ind < 0 || ind >= maxsize)
                 {
-                    throw 1;
+                    throw std::runtime_error("index exceed error");
                 }
                 if (ptr->ch[ind] == nullptr)
                 {
@@ -619,7 +619,7 @@ namespace toka
                 auto ind = seq[nxt];
                 if (ind < 0 || ind >= maxsize)
                 {
-                    throw 1;
+                    throw std::runtime_error("index exceed error");
                 }
                 if (ptr->ch[ind] == nullptr)
                 {
@@ -650,6 +650,23 @@ namespace toka
         {
             node -= data;
         }
+    };
+
+    template <typename T, size_t maxsize>
+    class ACAutomata : Trie<T, maxsize>
+    {
+    public:
+        ACAutomata()
+        {
+        }
+        void build(const std::vector<VI> &words)
+        {
+        }
+        void build(const std::vector<std::string> &words)
+        {
+        }
+
+    private:
     };
 
 } // namespace toka

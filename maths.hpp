@@ -25,8 +25,8 @@ namespace toka
         return x * y / g;
     }
 
-    template <typename T>
-    T qpow(T a, LL b, T one, int m = 0)
+    template <typename T, typename M = unsigned long>
+    T qpow(T a, LL b, T one, M m = 0)
     {
         T ret = one;
         T k = a;
@@ -45,11 +45,11 @@ namespace toka
         return ret;
     }
 
-    void get_primes(const int n, VI &ret)
+    void get_primes(const unsigned long n, VI &ret)
     {
         ret.clear();
         std::vector<bool> flags(n + 1, true);
-        for (int i = 2; i <= n; ++i)
+        for (unsigned long i = 2; i <= n; ++i)
         {
             if (flags[i])
             {
@@ -65,6 +65,33 @@ namespace toka
             }
         }
     }
+
+    template <typename T, typename M>
+    M divide_large(const std::vector<T> &n, M m, std::vector<T> &q, unsigned long long base = 10)
+    {
+        signed long L = n.size() - 1;
+        unsigned long long cum = 0;
+        q.clear();
+        q.resize(n.size(), 0);
+        while (L >= 0)
+        {
+            cum = cum * base + n[L];
+            if (cum >= m)
+            {
+                q[L] = cum / m;
+                cum = cum % m;
+            }
+            L -= 1;
+        }
+        L = n.size() - 1;
+        while (L >= 0 && q[L] == 0)
+        {
+            q.pop_back();
+            L -= 1;
+        }
+        return (M)cum;
+    }
+
 } // namespace toka
 
 #endif
