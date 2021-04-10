@@ -8,7 +8,7 @@ namespace toka
     template <typename T>
     T gcd(T x, T y)
     {
-        while (y)
+        while (y > 0)
         {
             T r = x % y;
             x = y;
