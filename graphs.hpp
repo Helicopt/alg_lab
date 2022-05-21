@@ -10,7 +10,7 @@ namespace toka
     std::vector<T> spfa(LinkGraph<Nd, Ed> &G, int src, T zero, T inf, T (*dist)(edge_t<Ed>) = nullptr)
     {
         if (dist == nullptr)
-            dist = [](edge_t<Ed> _e) -> Ed { return _e.w; };
+            dist = [](edge_t<Ed> _e) -> T { return (T)_e.w; };
         std::vector<T> D(G.size(), inf);
         D[src] = zero;
         std::vector<bool> inq(G.size(), false);
@@ -21,6 +21,7 @@ namespace toka
         {
             int x = q.front();
             q.pop();
+            inq[x] = false;
             auto &node = G[x];
             for (auto &e : G.get_edges(node))
             {
