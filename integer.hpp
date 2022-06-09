@@ -138,6 +138,10 @@ namespace toka
 
         Integer &_add(const Integer &other)
         {
+            if (*this == 0)
+                return *this = other;
+            if (other == 0)
+                return *this;
             if (pos == other.pos)
             {
                 size_t n = std::max(data.size(), other.data.size());
@@ -205,7 +209,7 @@ namespace toka
                     cum = 1;
                     for (size_t i = 0; i < n; ++i)
                     {
-                        cum += ~data[i];
+                        cum += data[i] ^ 0xFFFFFFFF;
                         data[i] = cum & 0xFFFFFFFF;
                         cum >>= 32;
                     }
